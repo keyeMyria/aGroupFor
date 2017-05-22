@@ -1,6 +1,6 @@
 import { AGroupForRow } from './a-group-for-row';
 
-describe('aGridForRow', () => {
+describe('aGroupForRow', () => {
 
     it('constructors parameters saves in fields', () => {
         let imp = { test: "111" }, index = 1, count = 10, instance = new AGroupForRow(imp, index, count);

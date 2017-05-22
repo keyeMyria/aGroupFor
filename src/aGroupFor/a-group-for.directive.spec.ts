@@ -25,7 +25,7 @@ class testContainer {
         { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1", id: 5 }]
 }
 
-describe('AGridFor.directive', () => {
+describe('AGroupFor.directive', () => {
     let instance, fixture;
 
     beforeEach(async(() => {
@@ -133,6 +133,36 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
         expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
         expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+    })
+
+    it('groups can be null', () => {
+        //clear all groups
+        fixture.componentInstance.groups = null;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children.length).toEqual(5);
+
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+    })
+
+    it('single group can be set by string', () => {
+        fixture.componentInstance.groups=fixture.componentInstance.groups[1];
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children.length).toEqual(8);
+
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f2v1 level 0');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        expect(fixture.nativeElement.children[3].innerText).toEqual('group f2v2 level 0');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v3 level 0');
+        expect(fixture.nativeElement.children[6].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[7].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
     it('adding group in the center should regroup every lower level children', () => {

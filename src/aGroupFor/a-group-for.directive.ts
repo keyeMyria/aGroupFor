@@ -16,8 +16,15 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
 
     @Input() public aGroupForOf: any;
 
-    @Input() public set aGroupForBy(groups: string[]) {
-        this._groups = groups || [];
+    @Input() public set aGroupForBy(groups: any) {
+        if(!groups){
+            groups=[];
+        }
+        if(!(groups instanceof Array)){
+            groups=[groups];
+        }
+
+        this._groups = groups;
     }
 
     @Input() public aGroupForTrackBy: TrackByFunction<T>;
