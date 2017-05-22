@@ -1,0 +1,24 @@
+<label><input type="checkbox" [(ngModel)]="showFilters" />show controls</label>
+
+<label><input type="checkbox" [(ngModel)]="showCol2" />show col 2</label>
+
+<label><input type="checkbox" [(ngModel)]="showGroup1" />show group 1</label>
+
+<label><input type="checkbox" [(ngModel)]="showGroup2" />show group 2</label>
+
+<label><input type="checkbox" [(ngModel)]="showGroup3" />show group 3</label>
+
+<label><input type="checkbox" [(ngModel)]="showHeader" />show header</label>
+
+<button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
+
+<div style="height: calc(100vh - 50px);">
+    <div *aGroupFor="let item of tableState.items$ | async by ['aaa']; let group=groupName; let i=index;">
+        <h3 *ngIf="group">{{item.value}}</h3>
+        <span *ngIf="!group">
+            <span>{{i}}</span>
+            <span>{{item.aaa+' '+item.sss+' '+item.ddd}}</span>
+        </span>
+    </div>
+	
+</div>

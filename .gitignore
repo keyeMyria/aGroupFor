@@ -1,0 +1,12 @@
+#lib for npm packaging#
+/lib
+
+#npm and bower modules#
+/node_modules
+/bower_components
+npm-debug.log
+/coverage
+/.nyc_output
+/index.js
+/index.d.ts
+coverage-final.json

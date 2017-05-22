@@ -1,0 +1,10 @@
+# Ignore everything
+/*
+
+
+# But not these files...
+!package.json
+!/lib/
+!lib/*
+!index.js
+!index.d.ts
