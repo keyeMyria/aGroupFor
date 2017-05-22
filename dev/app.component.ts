@@ -8,11 +8,11 @@ import { HomeTableState } from './app.table.state';
     providers: [
         HomeTableState
     ],
-    styles:[`a-grid .row-delete:hover{background-color:#f5b8b8;}`],
+    styles: [`a-grid .row-delete:hover{background-color:#f5b8b8;}`],
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-        public showFilters = true;
+    public showFilters = true;
 
     public showCol2 = true;
 
@@ -24,7 +24,7 @@ export class AppComponent {
 
     public showHeader = true;
 
-    constructor(private tableState: HomeTableState) { }
+    constructor(public tableState: HomeTableState) { }
 
     public showMessage(message) {
         alert(JSON.stringify(message));

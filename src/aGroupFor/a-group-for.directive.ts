@@ -25,7 +25,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
     private _rowDiffer: IterableDiffer<T> = null;
     private _groupDiffer: IterableDiffer<T> = null;
 
-    private _groups: string[]=[];
+    private _groups: string[] = [];
 
     private _groupTrackByFn: TrackByFunction<T>;
 
@@ -87,7 +87,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
 
             // get items with current group's value
             let curLevelDistinctArray = items
-                .filter(distinctItem =>
+                .filter((distinctItem) =>
                     distinctItem[group.groupName] === item[group.groupName]);
 
             // if item with current group's value is presented we won't add current item
@@ -109,14 +109,14 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             index = this._viewContainer.indexOf(group.parent.view) + 1;
         }
 
-        let currentGroupItem = parentBranchItems.filter(branchItem => branchItem[group.groupName] === group.value)[0];
+        let currentGroupItem = parentBranchItems.filter((branchItem) => branchItem[group.groupName] === group.value)[0];
 
         let currentItemIndex = parentBranchItems.indexOf(currentGroupItem);
         // getting previous group if it exists
         if (currentItemIndex > 0) {
             let previousItem = parentBranchItems[currentItemIndex - 1];
             let prevGroupValue = previousItem[group.groupName];
-            let beforeGroup = curLevelGroups.filter((group) => group.value === prevGroupValue)[0];
+            let beforeGroup = curLevelGroups.filter((groupInstance) => groupInstance.value === prevGroupValue)[0];
             if (beforeGroup) {
                 index = this._viewContainer.indexOf(beforeGroup.view) + this._getSubchildLength(beforeGroup) + 1;
             }
@@ -225,8 +225,8 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
         if (existingGroups.length) {
             let itemGroupIndex = this._findItemIndex(item);
             if (itemGroupIndex === 0) {
-                existingGroups.forEach((group) => {
-                    this._actualizeGroupIndex(group);
+                existingGroups.forEach((groupInstance) => {
+                    this._actualizeGroupIndex(groupInstance);
                 });
             }
         }
@@ -262,7 +262,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
     // removes item and it's parents if they do not have any other childs
     private _removeItem(item) {
         let rowItem = this._itemsMap.get(item);
-        let row: any = rowItem
+        let row: any = rowItem;
         if (row) {
             let existingGroups = this._getExistingGroupsForItem(item);
             if (rowItem.parent) {
@@ -296,7 +296,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             } while (row);
 
             existingGroups.forEach((group) => {
-                if(this._viewContainer.indexOf(group.view)>-1){
+                if (this._viewContainer.indexOf(group.view) > -1) {
                     this._actualizeGroupIndex(group);
                 }
             });
@@ -372,11 +372,11 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
 
         this._viewContainer.move(row.view, index);
         // if item is now first in group, actualize it group's index
-        let indexInGroup=this._findItemIndex(item);
-        if(indexInGroup===0){
-            let groups=this._getExistingGroupsForItem(item);
-            groups.forEach((group)=>{
-                this._actualizeGroupIndex(group);
+        let indexInGroup = this._findItemIndex(item);
+        if (indexInGroup === 0) {
+            let groups = this._getExistingGroupsForItem(item);
+            groups.forEach((groupInstance) => {
+                this._actualizeGroupIndex(groupInstance);
             });
         }
         return row;
@@ -500,7 +500,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             for (let i = 0, ilen = this.aGroupForOf.length; i < ilen; i++) {
                 let row = this._itemsMap.get(this.aGroupForOf[i]);
 
-                let viewRef = <EmbeddedViewRef<any>>row.view;
+                let viewRef = <EmbeddedViewRef<any>> row.view;
                 viewRef.context.index = i;
                 viewRef.context.count = ilen;
             }

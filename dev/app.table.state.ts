@@ -12,13 +12,13 @@ export class HomeTableState {
 
     public checkedProperty: string;
 
-    private _items: BehaviorSubject<any[]>;
-
-    private _selectedIndex: BehaviorSubject<number>;
-
     public expandedRows = [];
 
     public editableRow = null;
+
+    private _items: BehaviorSubject<any[]>;
+
+    private _selectedIndex: BehaviorSubject<number>;
 
     private count = 0;
 
@@ -76,7 +76,9 @@ export class HomeTableState {
     }
 
     public saveEditedRow(index: number) {
-        let leftPart = [], rightPart = [], items = this._items.getValue();
+        let leftPart = [];
+        let rightPart = [];
+        let items = this._items.getValue();
 
         if (index > 0) {
             leftPart = items.slice(0, index);
@@ -150,9 +152,6 @@ export class HomeTableState {
 
     }
 
-    public bodyScroll(e) {
-    }
-
     public checkDblClick(row) {
         let _itemsArray = this._items.getValue();
         row[this.checkedProperty] = !row[this.checkedProperty];
@@ -161,24 +160,20 @@ export class HomeTableState {
 
     }
 
-    deleteMouseOver(row) {
+    public deleteMouseOver(row) {
         this.renderer.setElementClass(row, 'row-delete', true);
     }
 
-    deleteMouseLeave(row) {
+    public deleteMouseLeave(row) {
         this.renderer.setElementClass(row, 'row-delete', false);
     }
 
     private _newItem() {
-/*        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
+        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
         let dddValues = [
             'Иванович', 'Петрович', 'Аристархович',
             'Николаевич', 'Васильевич', 'Олегович'];
-        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];*/
-                let aaaValues = ['Иванов', 'Петров', 'Сидоров'];
-        let dddValues = [
-            'Иванович', 'Петрович', 'Аристархович'];
-        let sssValues = ['Иван', 'Петр', 'Василий'];
+        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];
 
         let getRandomItem = (array) => array[Math.floor(Math.random() * array.length)];
         this.count++;
