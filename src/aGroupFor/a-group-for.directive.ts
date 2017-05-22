@@ -507,7 +507,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             for (let i = 0, ilen = this.aGroupForOf.length; i < ilen; i++) {
                 let row = this._itemsMap.get(this.aGroupForOf[i]);
 
-                let viewRef = <EmbeddedViewRef<any>> row.view;
+                let viewRef = row.view as EmbeddedViewRef<any>;
                 viewRef.context.index = i;
                 viewRef.context.count = ilen;
             }
