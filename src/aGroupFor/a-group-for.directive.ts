@@ -17,11 +17,11 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
     @Input() public aGroupForOf: any;
 
     @Input() public set aGroupForBy(groups: any) {
-        if(!groups){
-            groups=[];
+        if (!groups) {
+            groups = [];
         }
-        if(!(groups instanceof Array)){
-            groups=[groups];
+        if (!(groups instanceof Array)) {
+            groups = [groups];
         }
 
         this._groups = groups;
