@@ -1,6 +1,6 @@
 {
   "name": "agroupfor",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "an angular collection repeater with groupping",
   "main": "index.js",
   "scripts": {
