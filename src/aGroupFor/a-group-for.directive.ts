@@ -53,7 +53,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             }
         }
         if ('aGroupForBy' in changes) {
-            let value = changes['aGroupForBy'].currentValue;
+            let value = this._groups;
             if (!this._groupDiffer && value) {
                 this._groupDiffer = this._differs.find(value).create(this._groupTrackByFn);
             }
