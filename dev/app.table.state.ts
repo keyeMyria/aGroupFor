@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class HomeTableState {
+
     public groupBy: string[] = [];
 
     public set groupBySurname(value) {
@@ -21,19 +22,6 @@ export class HomeTableState {
 
     public get groupByName() {
         return this._groupByName;
-    }
-
-    private updateGroupByArray() {
-        let arr = [];
-        if (this._groupBySurname) {
-            arr.push('surname');
-        }
-        if (this._groupByName) {
-            arr.push('name');
-        }
-
-
-        this.groupBy = arr;
     }
 
     private _groupBySurname = true;
@@ -102,6 +90,18 @@ export class HomeTableState {
         }
 
         this._items.next(arr);
+    }
+
+    private updateGroupByArray() {
+        let arr = [];
+        if (this._groupBySurname) {
+            arr.push('surname');
+        }
+        if (this._groupByName) {
+            arr.push('name');
+        }
+
+        this.groupBy = arr;
     }
 
     private _newItem() {

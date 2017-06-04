@@ -17,12 +17,12 @@ export class AGroupForGroup {
 
     public removeChild(item) {
         let index = this.children.indexOf(item);
-        if(item.parent ===this){
-            item.parent=null;
+        if (item.parent === this) {
+            item.parent = null;
         }
 
         if (index > -1) {
-            
+
             this.children.splice(index, 1);
         }
     }
