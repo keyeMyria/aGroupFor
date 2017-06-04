@@ -25,6 +25,7 @@ class testContainer {
         { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1", id: 5 }]
 }
 
+
 describe('AGroupFor.directive', () => {
     let instance, fixture;
 
@@ -32,7 +33,7 @@ describe('AGroupFor.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                AGroupForDirective, testContainer
+                AGroupForDirective, testContainer, testContainerItemParent
             ]
         }).compileComponents().then(() => {
             fixture = TestBed.createComponent(testContainer);
@@ -608,3 +609,127 @@ describe('AGroupFor.directive', () => {
     });
 
 });
+
+
+//component to checking existing of parent after regrouping
+@Component({
+    template: `
+        <div *aGroupFor="let item of items by groups;trackBy:item?.id; let group=groupName; let par=parent;">{{group?'group '+item.value:item.id+' '+(par?'true':'false')}}</div>
+        `,
+    selector: 'test-container-item-parent'
+})
+class testContainerItemParent {
+    @ViewChild(AGroupForDirective) public targetDirective;
+
+    groups = ['field1', 'field2']
+
+    items: Array<any> = [
+        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1", id: 1 },
+        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1", id: 2 },
+        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1", id: 3 },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1", id: 4 },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1", id: 5 }]
+}
+
+describe('aGroupFor.directive testing item parent', () => {
+    let testParentFixture, testParentInstance;
+    beforeEach(async(() => {
+        return TestBed.configureTestingModule({
+
+            declarations: [
+                AGroupForDirective, testContainerItemParent
+            ]
+        }).compileComponents().then(() => {
+
+
+            testParentFixture = TestBed.createComponent(testContainerItemParent);
+            testParentFixture.detectChanges();
+            testParentInstance = testParentFixture.componentInstance.targetDirective;
+        });
+    }));
+
+
+    it('items with initial groupping has parent', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(testParentFixture.nativeElement.children.length).toEqual(10);
+
+        //field1 group f1v1
+        expect(testParentFixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        //field2 group f2v1
+        expect(testParentFixture.nativeElement.children[1].innerText).toEqual('group f2v1');
+        //group items
+        expect(testParentFixture.nativeElement.children[2].innerText).toEqual('1 true');
+        expect(testParentFixture.nativeElement.children[3].innerText).toEqual('3 true');
+
+        //group f2v2
+        expect(testParentFixture.nativeElement.children[4].innerText).toEqual('group f2v2');
+        //group item
+        expect(testParentFixture.nativeElement.children[5].innerText).toEqual('2 true');
+
+        //group f1v2
+        expect(testParentFixture.nativeElement.children[6].innerText).toEqual('group f1v2');
+        //group f2v3
+        expect(testParentFixture.nativeElement.children[7].innerText).toEqual('group f2v3');
+
+        //group items
+        expect(testParentFixture.nativeElement.children[8].innerText).toEqual('4 true');
+        expect(testParentFixture.nativeElement.children[9].innerText).toEqual('5 true');
+    })
+
+    it('when we remove one group, parent should exist', () => {
+        (testParentFixture.componentInstance.groups as Array<any>).splice(0, 1);
+        testParentFixture.detectChanges();
+        expect(testParentFixture.nativeElement.children.length).toEqual(8);
+
+        expect(testParentFixture.nativeElement.children[0].innerText).toEqual('group f2v1');
+        expect(testParentFixture.nativeElement.children[1].innerText).toEqual('1 true');
+        expect(testParentFixture.nativeElement.children[2].innerText).toEqual('3 true');
+
+        expect(testParentFixture.nativeElement.children[3].innerText).toEqual('group f2v2');
+        expect(testParentFixture.nativeElement.children[4].innerText).toEqual('2 true');
+
+        expect(testParentFixture.nativeElement.children[5].innerText).toEqual('group f2v3');
+        expect(testParentFixture.nativeElement.children[6].innerText).toEqual('4 true');
+        expect(testParentFixture.nativeElement.children[7].innerText).toEqual('5 true');
+    })
+
+    it('items without groupping should not have parent', () => {
+        (testParentFixture.componentInstance.groups as Array<any>).splice(0);
+        testParentFixture.detectChanges();
+        expect(testParentFixture.nativeElement.children.length).toEqual(5);
+
+        expect(testParentFixture.nativeElement.children[0].innerText).toEqual('1 false');
+        expect(testParentFixture.nativeElement.children[1].innerText).toEqual('2 false');
+        expect(testParentFixture.nativeElement.children[2].innerText).toEqual('3 false');
+        expect(testParentFixture.nativeElement.children[3].innerText).toEqual('4 false');
+        expect(testParentFixture.nativeElement.children[4].innerText).toEqual('5 false');
+    })
+
+    it('adding group should add a parent', () => {
+        (testParentFixture.componentInstance.groups as Array<any>).splice(0);
+        testParentFixture.detectChanges();
+        expect(testParentFixture.nativeElement.children.length).toEqual(5);
+
+        expect(testParentFixture.nativeElement.children[0].innerText).toEqual('1 false');
+        expect(testParentFixture.nativeElement.children[1].innerText).toEqual('2 false');
+        expect(testParentFixture.nativeElement.children[2].innerText).toEqual('3 false');
+        expect(testParentFixture.nativeElement.children[3].innerText).toEqual('4 false');
+        expect(testParentFixture.nativeElement.children[4].innerText).toEqual('5 false');
+
+        testParentFixture.componentInstance.groups=['field2'];
+        testParentFixture.detectChanges();
+        expect(testParentFixture.nativeElement.children.length).toEqual(8);
+
+        expect(testParentFixture.nativeElement.children[0].innerText).toEqual('group f2v1');
+        expect(testParentFixture.nativeElement.children[1].innerText).toEqual('1 true');
+        expect(testParentFixture.nativeElement.children[2].innerText).toEqual('3 true');
+
+        expect(testParentFixture.nativeElement.children[3].innerText).toEqual('group f2v2');
+        expect(testParentFixture.nativeElement.children[4].innerText).toEqual('2 true');
+
+        expect(testParentFixture.nativeElement.children[5].innerText).toEqual('group f2v3');
+        expect(testParentFixture.nativeElement.children[6].innerText).toEqual('4 true');
+        expect(testParentFixture.nativeElement.children[7].innerText).toEqual('5 true');
+    })
+
+})

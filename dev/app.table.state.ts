@@ -4,35 +4,40 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable()
 export class HomeTableState {
 
-    public aaaFilter: string;
+    public groupBy: string[] = [];
 
-    public dddFilter: string;
+    public set groupBySurname(value) {
+        this._groupBySurname = value;
+        this.updateGroupByArray();
+    }
 
-    public selectedProperty: string;
+    public get groupBySurname() {
+        return this._groupBySurname;
+    }
 
-    public checkedProperty: string;
+    public set groupByName(value) {
+        this._groupByName = value;
+        this.updateGroupByArray();
+    }
 
-    public expandedRows = [];
+    public get groupByName() {
+        return this._groupByName;
+    }
 
-    public editableRow = null;
+    private _groupBySurname = true;
+
+    private _groupByName = false;
 
     private _items: BehaviorSubject<any[]>;
-
-    private _selectedIndex: BehaviorSubject<number>;
 
     private count = 0;
 
     constructor(private renderer: Renderer) {
         this._items = new BehaviorSubject<any[]>([]);
-        this._selectedIndex = new BehaviorSubject<number>(-1);
 
-        this.selectedProperty = 'aGridSelected';
-        this.checkedProperty = 'aGridChecked';
-
+        this.updateGroupByArray();
         this.load();
 
-        this.aaaFilter = '';
-        this.dddFilter = '';
     }
 
     get items$() {
@@ -42,20 +47,6 @@ export class HomeTableState {
         return this._items.getValue();
     }
 
-    get selectedIndex$() {
-        return this._selectedIndex.asObservable();
-    }
-    get selectedIndex() {
-        return this._selectedIndex.getValue();
-    }
-
-    get checked$() {
-        return this._items.map((items) => items.filter((item) => item[this.checkedProperty]));
-    }
-    get checked() {
-        return this._items.getValue().filter((item) => item[this.checkedProperty]);
-    }
-
     public modifyDays(index: number, value: number) {
         let items = this._items.getValue();
 
@@ -63,40 +54,6 @@ export class HomeTableState {
             items[index].eee = items[index].eee + value;
             this._items.next([...items]);
         }
-    }
-
-    public toggleRow(row) {
-        if (this.expandedRows.indexOf(row) === -1) {
-            this.expandedRows = [row];
-            this.editableRow = { ...row };
-        } else {
-            this.expandedRows = [];
-            this.editableRow = null;
-        }
-    }
-
-    public saveEditedRow(index: number) {
-        let leftPart = [];
-        let rightPart = [];
-        let items = this._items.getValue();
-
-        if (index > 0) {
-            leftPart = items.slice(0, index);
-        }
-
-        if (index < items.length - 1) {
-            rightPart = items.slice(index + 1);
-        }
-
-        this._items.next([...leftPart, this.editableRow, ...rightPart]);
-    }
-
-    public addDay(index: number) {
-        this.modifyDays(index, 1);
-    }
-
-    public removeDay(index: number) {
-        this.modifyDays(index, -1);
     }
 
     public removeItem(row) {
@@ -134,52 +91,31 @@ export class HomeTableState {
 
         this._items.next(arr);
     }
-    public select(row) {
-        let _itemsArray = this._items.getValue();
-        let _index = this._selectedIndex.getValue();
-        // set current row selected property to true
-        if (_index > -1) {
-            _itemsArray[_index][this.selectedProperty] = false;
+
+    private updateGroupByArray() {
+        let arr = [];
+        if (this._groupBySurname) {
+            arr.push('surname');
+        }
+        if (this._groupByName) {
+            arr.push('name');
         }
 
-        _index = _itemsArray.indexOf(row);
-
-        row[this.selectedProperty] = true;
-        // set current selected index
-        this._selectedIndex.next(_index);
-        // save changed collection
-        this._items.next([..._itemsArray]);
-
-    }
-
-    public checkDblClick(row) {
-        let _itemsArray = this._items.getValue();
-        row[this.checkedProperty] = !row[this.checkedProperty];
-
-        this._items.next([..._itemsArray]);
-
-    }
-
-    public deleteMouseOver(row) {
-        this.renderer.setElementClass(row, 'row-delete', true);
-    }
-
-    public deleteMouseLeave(row) {
-        this.renderer.setElementClass(row, 'row-delete', false);
+        this.groupBy = arr;
     }
 
     private _newItem() {
-        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
-        let dddValues = [
+        let surnameValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
+        let patrionityValues = [
             'Иванович', 'Петрович', 'Аристархович',
             'Николаевич', 'Васильевич', 'Олегович'];
-        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];
+        let nameValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];
 
         let getRandomItem = (array) => array[Math.floor(Math.random() * array.length)];
         this.count++;
         return {
-            _ouid: this.count, aaa: getRandomItem(aaaValues),
-            sss: getRandomItem(sssValues), ddd: getRandomItem(dddValues), eee: 1
+            _ouid: this.count, surname: getRandomItem(surnameValues),
+            name: getRandomItem(nameValues), patrionity: getRandomItem(patrionityValues), eee: 1
         };
     }
 }
