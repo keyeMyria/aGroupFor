@@ -319,12 +319,7 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
             this._viewContainer.remove(index);
 
             // remove parent from all children of current deleting group instance
-            if (groupRow.children) {
-                groupRow.children.forEach((rowChild) => {
-                    groupRow.removeChild(rowChild);
-                });
-                groupRow.children = [];
-            }
+            groupRow.clearChilds();
 
             // remove this instance from it's parents children
             if (groupRow.parent) {
@@ -400,9 +395,6 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
         // find actual parent group for current row
         let group: AGroupForGroup = this._getRowGroup(row.$implicit);
         if (group) {
-            if (row.parent) {
-                row.parent.removeChild(this);
-            }
             index = this._viewContainer.indexOf(group.view) + group.children.length + 1;
             group.addChild(row);
         }
@@ -456,15 +448,6 @@ export class AGroupForDirective<T> implements DoCheck, OnChanges {
 
             groupsToDelete.forEach((group) => {
                 this._removeGroup(group);
-            });
-
-            // for all items we should clear parent's childs
-            // for preventing groups/items position collisions
-            this.aGroupForOf.forEach((item) => {
-                let row: any = this._itemsMap.get(item);
-                if (row && row.parent) {
-                    row.parent.clearChilds();
-                }
             });
 
             // then we should reattach all items, it will create groups that items needed
